@@ -2,81 +2,55 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>Admin Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aura X Cheats Admin</title>
 <style>
-body{background:#0b0b0b;color:#fff;font-family:Arial,sans-serif;padding:15px;}
-h1{color:#00ffcc;text-align:center;text-shadow:0 0 6px #00ffcc;}
+body{background:#0b0b0b;color:#fff;font-family:Arial;padding:15px;}
+h1{text-align:center;color:#a855f7;}
 table{width:100%;border-collapse:collapse;margin-top:20px;}
-th,td{padding:10px;border:1px solid #00ffcc;text-align:center;}
-th{background:#111;}
-tr:hover{background:#111;}
-button{padding:6px 12px;background:#00ffcc;border:none;color:#000;border-radius:6px;cursor:pointer;}
+th,td{padding:10px;border:1px solid #a855f7;text-align:center;}
+button{padding:6px 12px;background:#a855f7;border:none;color:#000;border-radius:6px;cursor:pointer;}
 button:hover{background:#00ffaa;}
 </style>
 </head>
 <body>
-
-<h1>Aura X Cheats Admin Dashboard</h1>
-
+<h1>Admin Dashboard</h1>
 <table id="ordersTable">
-  <tr>
-    <th>#</th>
-    <th>Name</th>
-    <th>Product</th>
-    <th>Amount</th>
-    <th>UTR</th>
-    <th>Action</th>
-  </tr>
+<tr><th>#</th><th>Name</th><th>Product</th><th>Price</th><th>UTR</th><th>Action</th></tr>
 </table>
-
 <button onclick="exportCSV()">Export CSV</button>
 
 <script>
-// Dummy orders storage (replace with EmailJS or Google Sheets later)
 let orders = JSON.parse(localStorage.getItem('orders')||'[]');
+const table = document.getElementById("ordersTable");
 
-function renderTable(){
-  const table = document.getElementById('ordersTable');
-  table.innerHTML = `<tr>
-    <th>#</th><th>Name</th><th>Product</th><th>Amount</th><th>UTR</th><th>Action</th>
-  </tr>`;
+function render(){
+  table.innerHTML=`<tr><th>#</th><th>Name</th><th>Product</th><th>Price</th><th>UTR</th><th>Action</th></tr>`;
   orders.forEach((o,i)=>{
     const row = table.insertRow();
-    row.insertCell(0).innerText = i+1;
-    row.insertCell(1).innerText = o.name;
-    row.insertCell(2).innerText = o.product;
-    row.insertCell(3).innerText = o.amount;
-    row.insertCell(4).innerText = o.utr;
-    const btn = document.createElement('button');
-    btn.innerText="Delete";
-    btn.onclick=()=>{orders.splice(i,1);saveAndRender();}
+    row.insertCell(0).innerText=i+1;
+    row.insertCell(1).innerText=o.name;
+    row.insertCell(2).innerText=o.product;
+    row.insertCell(3).innerText=o.price;
+    row.insertCell(4).innerText=o.utr;
+    const btn=document.createElement("button");
+    btn.innerText="Delete"; btn.onclick=()=>{orders.splice(i,1); saveRender();}
     row.insertCell(5).appendChild(btn);
   });
 }
 
-function saveAndRender(){
-  localStorage.setItem('orders',JSON.stringify(orders));
-  renderTable();
-}
+function saveRender(){ localStorage.setItem("orders",JSON.stringify(orders)); render(); }
 
 function exportCSV(){
-  let csv="Name,Product,Amount,UTR\n";
-  orders.forEach(o=>csv+=`${o.name},${o.product},${o.amount},${o.utr}\n`);
+  let csv="Name,Product,Price,UTR\n";
+  orders.forEach(o=>csv+=`${o.name},${o.product},${o.price},${o.utr}\n`);
   const blob=new Blob([csv],{type:'text/csv'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download="orders.csv";
-  a.click();
+  a.download="orders.csv"; a.click();
 }
 
-// For testing, add dummy order (remove in real site)
-if(orders.length===0){
-  orders.push({name:"Test User",product:"Free Fire Diamonds",amount:"199",utr:"UTR123"});
-  saveAndRender();
-}
-
-renderTable();
+render();
 </script>
 </body>
 </html>
