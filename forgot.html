@@ -43,12 +43,14 @@ a { color: #a855f7; text-decoration: none; }
 
 <div class="container">
   <h2>Forgot Password</h2>
+
   <form id="forgotForm">
     <input type="text" id="username" placeholder="Username" required>
     <input type="email" id="email" placeholder="Registered Email" required>
     <input type="password" id="newPassword" placeholder="New Password" required>
     <button type="submit">RESET PASSWORD</button>
   </form>
+
   <p><a href="login.html">Back to Login</a></p>
 </div>
 
@@ -57,24 +59,27 @@ document.getElementById("forgotForm").addEventListener("submit", function(e){
   e.preventDefault();
 
   const username = document.getElementById("username").value.trim();
-  const email = document.getElementById("email").value.trim();
+  const email = document.getElementById("email").value.trim().toLowerCase(); // ✅ FIX
   const newPassword = document.getElementById("newPassword").value;
 
-  let users = JSON.parse(localStorage.getItem("users") || "[]");
+  let users = JSON.parse(localStorage.getItem("users")) || [];
 
-  // Find user by both email and username
-  const index = users.findIndex(u => u.email === email && u.username === username);
+  // ✅ FIND USER SAFELY
+  const userIndex = users.findIndex(u =>
+    u.email.toLowerCase() === email &&
+    u.username === username
+  );
 
-  if(index === -1){
+  if(userIndex === -1){
     alert("❌ No account found with this Username & Email!");
     return;
   }
 
-  // Update password
-  users[index].password = newPassword;
+  // ✅ UPDATE PASSWORD
+  users[userIndex].password = newPassword;
   localStorage.setItem("users", JSON.stringify(users));
 
-  alert("✅ Password reset successfully! Please login.");
+  alert("✅ Password reset successful! Please login.");
   window.location.href = "login.html";
 });
 </script>
