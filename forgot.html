@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Forgot Password | Aura X Cheats</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#0b0b0f;
+  color:#fff;
+}
+.box{
+  max-width:380px;
+  margin:80px auto;
+  padding:25px;
+  background:#141414;
+  border-radius:12px;
+  box-shadow:0 0 25px rgba(168,85,247,.25);
+}
+h2{text-align:center;margin-bottom:20px}
+input{
+  width:100%;
+  padding:12px;
+  margin-bottom:14px;
+  border-radius:8px;
+  border:none;
+  outline:none;
+}
+button{
+  width:100%;
+  padding:12px;
+  background:#a855f7;
+  color:#000;
+  font-weight:800;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+button:hover{opacity:.9}
+.msg{
+  margin-top:14px;
+  text-align:center;
+  font-size:14px;
+}
+a{color:#a855f7;text-decoration:none}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>Forgot Password</h2>
+
+  <input type="text" id="username" placeholder="Enter Username" required>
+  <input type="email" id="email" placeholder="Enter Email" required>
+  <input type="password" id="newPass" placeholder="New Password">
+
+  <button onclick="recover()">Recover Password</button>
+
+  <div class="msg" id="msg"></div>
+
+  <p style="text-align:center;margin-top:15px;">
+    <a href="login.html">Back to Login</a>
+  </p>
+</div>
+
+<script>
+function recover(){
+  const username = document.getElementById("username").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const newPass = document.getElementById("newPass").value.trim();
+  const msg = document.getElementById("msg");
+
+  if(!username || !email){
+    msg.innerHTML = "❌ Please fill all required fields";
+    return;
+  }
+
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  let user = users.find(u => u.username === username && u.email === email);
+
+  if(!user){
+    msg.innerHTML = "❌ No matching account found";
+    return;
+  }
+
+  if(newPass){
+    user.password = newPass;
+    localStorage.setItem("users", JSON.stringify(users));
+    msg.innerHTML = "✅ Password updated! You can login now.";
+  } else {
+    msg.innerHTML = "✅ Account verified. Enter new password.";
+  }
+}
+</script>
+
+</body>
+</html>
