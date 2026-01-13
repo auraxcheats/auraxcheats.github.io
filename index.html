@@ -1,37 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aura X Cheats Store</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body{margin:0;font-family:Arial;background:#0b0b0b;color:#fff}
-header{background:#111;padding:15px;text-align:center}
-h1{color:#00ffcc;margin:0}
-.box{background:#161616;margin:15px;padding:15px;border-radius:10px}
-a.btn{display:block;background:#00ffcc;color:#000;padding:10px;text-align:center;text-decoration:none;border-radius:8px;font-weight:bold}
-footer{text-align:center;font-size:12px;color:#777;padding:10px}
+/* Body & font */
+body{margin:0;font-family:Arial,sans-serif;background:#0b0b0b;color:#fff;}
+header{background:#111;padding:20px;text-align:center;box-shadow:0 0 10px #00ffcc;}
+h1{color:#00ffcc;margin:0;font-size:24px;text-shadow: 0 0 5px #00ffcc;}
+.container{padding:15px;}
+/* Product card */
+.card{background:#161616;margin-bottom:20px;padding:15px;border-radius:12px;box-shadow:0 0 20px #00ffcc;transition: transform 0.2s, box-shadow 0.2s;}
+.card:hover{transform: scale(1.02);box-shadow:0 0 30px #00ffcc;}
+.card h3{color:#ffcc00;margin-top:0;text-shadow:0 0 5px #ffcc00;}
+.card p{margin:5px 0;}
+.card img{width:100%;border-radius:10px;margin:10px 0;}
+.btn{display:block;text-align:center;background:#00ffcc;color:#000;padding:12px;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:10px;cursor:pointer;transition:0.2s;}
+.btn:hover{background:#00ffaa;}
+input, select{width:100%;padding:10px;margin:5px 0;border-radius:5px;border:none;}
+footer{text-align:center;padding:15px;font-size:12px;color:#777;}
+.note{font-size:13px;color:#ccc;margin-top:5px;}
 </style>
 </head>
 <body>
 
 <header>
 <h1>AURA X CHEATS STORE</h1>
-<p>Premium Gaming Tools</p>
+<p>Premium Gaming Cheats & Tools</p>
 </header>
 
-<div class="box">
-<h3>🎮 Cheats & Mods</h3>
-<a class="btn" href="payment.html">Pay via UPI QR</a>
+<div class="container">
+
+<!-- Product 1 -->
+<div class="card">
+<h3>💎 Free Fire Diamonds - ₹199</h3>
+<img src="upi-qr.png" alt="UPI QR">
+<p><b>UPI ID:</b> kumaripalak0@fam</p>
+<button class="btn" onclick="showForm('Free Fire Diamonds',199)">Order Now</button>
 </div>
 
-<div class="box">
-<h3>📞 Support</h3>
-<a class="btn" href="https://t.me/aura_x_cheats">Telegram Support</a>
+<!-- Product 2 -->
+<div class="card">
+<h3>🤖 Guild Glory Bot - ₹299</h3>
+<img src="upi-qr.png" alt="UPI QR">
+<p><b>UPI ID:</b> kumaripalak0@fam</p>
+<button class="btn" onclick="showForm('Guild Glory Bot',299)">Order Now</button>
+</div>
+
+<!-- Product 3 -->
+<div class="card">
+<h3>🎮 Cheats & Mods - ₹499</h3>
+<img src="upi-qr.png" alt="UPI QR">
+<p><b>UPI ID:</b> kumaripalak0@fam</p>
+<button class="btn" onclick="showForm('Cheats & Mods',499)">Order Now</button>
+</div>
+
+<!-- Inline Order Form -->
+<div class="card" id="orderFormCard" style="display:none;">
+<h3>Submit Your Order</h3>
+<form id="orderForm">
+<input type="text" name="name" placeholder="Your Name" required>
+<input type="text" name="product" id="productName" readonly>
+<input type="text" name="amount" id="productPrice" readonly>
+<input type="text" name="utr" placeholder="Transaction ID / UTR" required>
+<button type="submit" class="btn">Submit Order</button>
+<p id="msg" class="note"></p>
+</form>
+</div>
+
 </div>
 
 <footer>
 © 2026 Aura X Cheats Store
 </footer>
+
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+// Initialize EmailJS
+(function(){emailjs.init('lDpUNN_uwsW-vT8_2');})();
+
+// Show form with product details
+function showForm(product, price){
+    document.getElementById('orderFormCard').style.display='block';
+    document.getElementById('productName').value = product;
+    document.getElementById('productPrice').value = price;
+    window.scrollTo({top: document.getElementById('orderFormCard').offsetTop, behavior: 'smooth'});
+}
+
+// Handle form submission
+document.getElementById('orderForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = this.name.value;
+    const product = this.product.value;
+    const amount = this.amount.value;
+    const utr = this.utr.value;
+
+    emailjs.send('service_sd0ge44','template_eclz1lh',{
+        from_name: name,
+        product_name: product,
+        amount_paid: amount,
+        utr_number: utr
+    })
+    .then(function(response){
+        document.getElementById('msg').innerText = "✅ Order submitted successfully!";
+        document.getElementById('orderForm').reset();
+    }, function(error){
+        document.getElementById('msg').innerText = "❌ Something went wrong. Try again.";
+    });
+});
+</script>
 
 </body>
 </html>
