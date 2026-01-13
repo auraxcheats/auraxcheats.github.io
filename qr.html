@@ -2,69 +2,69 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Scan & Pay</title>
+<title>Scan & Pay | Aura X Cheats</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
 body{
   background:#0b0b0f;
   color:#fff;
-  font-family:Arial;
-  text-align:center
+  font-family:Arial, sans-serif;
+  text-align:center;
+  padding:20px;
 }
 .box{
   max-width:380px;
   margin:60px auto;
-  padding:20px;
+  padding:25px;
   background:#141414;
-  border-radius:14px
+  border-radius:14px;
+  box-shadow:0 0 20px rgba(168,85,247,.4);
 }
+h2, h1{margin:6px 0}
 button{
   padding:14px 22px;
   background:#a855f7;
   border:none;
   border-radius:10px;
   font-weight:800;
-  cursor:pointer
+  cursor:pointer;
+  margin-top:15px;
 }
+button:hover{opacity:.9}
 a{color:#a855f7;text-decoration:none}
+img{border-radius:12px;margin-top:15px}
 </style>
 </head>
-
 <body>
 
 <div class="box">
-  <h2 id="pname"></h2>
+  <h2 id="pname">Loading...</h2>
   <h1 id="price"></h1>
 
-  <img src="qr.png" width="220"><br><br>
-  <b>UPI ID:</b> kumaripalak0@fam
+  <img id="qrimg" src="qr.png" width="220" alt="Scan QR to Pay"><br>
+  <p><b>UPI ID:</b> kumaripalak0@fam</p>
 
-  <br><br>
   <button onclick="goPay()">I HAVE PAID</button>
-
-  <p style="margin-top:15px">
-    <a href="index.html">Back to Home</a>
-  </p>
+  <p style="margin-top:15px"><a href="index.html">Back to Home</a></p>
 </div>
 
 <script>
+// GET QUERY PARAMETERS
 const params = new URLSearchParams(window.location.search);
 const product = params.get("product");
 const price = params.get("price");
 
+// CHECK ACCESS
 if(!product || !price){
-  document.body.innerHTML =
-    "<h2>Invalid Access</h2><a href='index.html'>Go Home</a>";
+  document.body.innerHTML = "<h2>Invalid Access</h2><a href='index.html'>Go Home</a>";
 }else{
-  document.getElementById("pname").innerText =
-    decodeURIComponent(product);
-  document.getElementById("price").innerText = "₹"+price;
+  document.getElementById("pname").innerText = decodeURIComponent(product);
+  document.getElementById("price").innerText = "₹" + price;
 }
 
+// REDIRECT TO PAY PAGE AFTER PAYMENT
 function goPay(){
-  window.location.href =
-    "./pay.html?product="+product+"&price="+price;
+  window.location.href = "./pay.html?product="+encodeURIComponent(product)+"&price="+price;
 }
 </script>
 
