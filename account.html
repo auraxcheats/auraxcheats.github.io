@@ -2,64 +2,83 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Account | Aura X Cheats</title>
+<title>My Account | Aura X Cheats Store</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body{background:#0b0b0f;color:#fff;font-family:Arial,sans-serif;padding:20px;}
-h2{color:#a855f7;text-align:center;}
-button{padding:10px 20px;margin:10px;background:#a855f7;color:#000;border:none;border-radius:8px;cursor:pointer;}
-.order{border:1px solid #a855f7;padding:10px;margin:10px;border-radius:8px;}
+body{margin:0;font-family:Arial;background:radial-gradient(circle at top,#1c1030,#0b0b0f 65%);color:#fff;padding:20px}
+.container{max-width:600px;margin:auto;background:#141414;padding:20px;border-radius:14px;border:1px solid rgba(255,255,255,.1)}
+h2{text-align:center;margin-bottom:20px}
+.user-info{margin-bottom:20px;text-align:center}
+.user-info b{color:#a855f7}
+.order{background:#0f0f0f;padding:14px;margin-bottom:12px;border-radius:10px;border:1px solid rgba(255,255,255,.08)}
+.order h3{margin:0 0 6px}
+.order p{margin:4px 0;font-size:14px;opacity:.9}
+button{padding:10px 16px;background:#a855f7;border:none;color:#000;font-weight:800;border-radius:10px;cursor:pointer;margin-top:15px}
+button:hover{opacity:.85}
+a{color:#a855f7;text-decoration:none}
 </style>
 </head>
 <body>
 
-<h2>My Account</h2>
-<div id="userInfo"></div>
-
-<h2>My Orders</h2>
-<div id="orders"></div>
-
-<button onclick="logout()">Logout</button>
+<div class="container">
+  <h2>My Account</h2>
+  <div class="user-info" id="userInfo"></div>
+  <h3>Your Orders</h3>
+  <div id="ordersList">
+    <p style="opacity:.6">No orders yet.</p>
+  </div>
+  <div style="text-align:center">
+    <button onclick="logout()">Logout</button>
+    <p><a href="index.html">⬅ Back to Home</a></p>
+  </div>
+</div>
 
 <script>
-// Check logged-in user
-const currentUserEmail = localStorage.getItem("currentUser");
-if(!currentUserEmail){
-  alert("Please login first!");
+// GET LOGGED IN USER
+const user = JSON.parse(localStorage.getItem("loggedUser"));
+if(!user){
+  alert("❌ You must login first!");
   window.location.href="login.html";
 }
 
-// Get user data
-const userData = JSON.parse(localStorage.getItem(currentUserEmail));
-document.getElementById("userInfo").innerHTML = `
-  <b>Username:</b> ${userData.username} <br>
-  <b>Email:</b> ${userData.email}
+// SHOW USER INFO
+const userInfo = document.getElementById("userInfo");
+userInfo.innerHTML = `
+  <p><b>Username:</b> ${user.username}</p>
+  <p><b>Email:</b> ${user.email}</p>
 `;
 
-// Display orders
-const ordersDiv = document.getElementById("orders");
-if(userData.orders.length === 0){
-  ordersDiv.innerHTML = "<i>No orders yet.</i>";
-} else {
-  userData.orders.forEach((o,i)=>{
-    ordersDiv.innerHTML += `
-      <div class="order">
-        <b>Order #${i+1}</b><br>
-        Product: ${o.product}<br>
-        Price: ₹${o.price}<br>
-        UTR: ${o.utr}<br>
-        Guild UID: ${o.guildUid}<br>
-        Region: ${o.region}<br>
-        Telegram: ${o.telegram}<br>
-        WhatsApp: ${o.whatsapp}<br>
-        Status: ${o.status || "Pending"}
-      </div>
+// LOAD USER ORDERS
+const orders = JSON.parse(localStorage.getItem("orders") || "[]");
+const userOrders = orders.filter(o => o.username === user.username);
+
+const ordersList = document.getElementById("ordersList");
+ordersList.innerHTML = "";
+
+if(userOrders.length === 0){
+  ordersList.innerHTML = `<p style="opacity:.6">No orders yet.</p>`;
+}else{
+  userOrders.forEach(o=>{
+    const div = document.createElement("div");
+    div.className="order";
+    div.innerHTML = `
+      <h3>${o.product}</h3>
+      <p><b>Price:</b> ₹${o.price}</p>
+      <p><b>UTR:</b> ${o.utr}</p>
+      <p><b>Guild UID:</b> ${o.uid}</p>
+      <p><b>Region:</b> ${o.region}</p>
+      <p><b>Telegram:</b> ${o.telegram}</p>
+      <p><b>WhatsApp:</b> ${o.whatsapp}</p>
+      <p><b>Email:</b> ${o.email}</p>
     `;
+    ordersList.appendChild(div);
   });
 }
 
+// LOGOUT
 function logout(){
-  localStorage.removeItem("currentUser");
-  window.location.href="login.html";
+  localStorage.removeItem("loggedUser");
+  window.location.href="index.html";
 }
 </script>
 
