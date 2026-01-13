@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Scan & Pay</title>
+<title>Scan & Pay | Aura X Cheats Store</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -11,17 +11,17 @@ body{
   font-family:Arial,Helvetica,sans-serif;
   background:#0b0b0f;
   color:#fff;
+  text-align:center;
 }
-.box{
+.container{
   max-width:420px;
-  margin:40px auto;
+  margin:50px auto;
   background:#141414;
   padding:22px;
   border-radius:16px;
-  text-align:center;
   border:1px solid rgba(255,255,255,.1);
 }
-h2{margin-bottom:10px}
+h2{margin-bottom:10px;}
 .price{
   font-size:32px;
   color:#a855f7;
@@ -43,23 +43,22 @@ button{
   border-radius:12px;
   cursor:pointer;
 }
-small{opacity:.7}
+button:hover{opacity:.85;}
+small{opacity:.7;}
 </style>
 </head>
 
 <body>
 
-<div class="box">
+<div class="container">
   <h2>Scan QR & Pay</h2>
   <div id="productName"></div>
   <div class="price" id="price"></div>
 
-  <!-- 🔴 REPLACE WITH YOUR REAL QR IMAGE -->
+  <!-- 🔴 Your QR image -->
   <img src="qr.png" alt="Scan to Pay">
 
-  <small>
-    After payment, click continue and submit UTR.
-  </small><br><br>
+  <small>After payment, click "I HAVE PAID" and submit UTR.</small><br><br>
 
   <button onclick="goNext()">I HAVE PAID</button>
 </div>
