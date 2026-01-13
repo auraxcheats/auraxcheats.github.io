@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pay Now</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{background:#0b0b0b;color:#fff;font-family:Arial;padding:20px;}
+h2{text-align:center;color:#a855f7;}
+input,button{width:100%;padding:12px;margin:6px 0;border-radius:8px;border:none;}
+button{background:#a855f7;color:#000;font-weight:bold;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<h2 id="prodName"></h2>
+<p style="text-align:center">Amount: ₹<span id="prodPrice"></span></p>
+<img src="upi-qr.png" style="width:100%;max-width:300px;display:block;margin:10px auto">
+<p style="text-align:center"><b>UPI ID:</b> kumaripalak0@fam</p>
+
+<form id="orderForm">
+<input type="text" placeholder="Your Name" required>
+<input type="text" placeholder="Transaction ID / UTR" required>
+<button type="submit">Submit Order</button>
+</form>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+document.getElementById("prodName").innerText = params.get("name");
+document.getElementById("prodPrice").innerText = params.get("price");
+
+document.getElementById("orderForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const name = this[0].value;
+  const utr = this[1].value;
+  const product = params.get("name");
+  const price = params.get("price");
+
+  let orders = JSON.parse(localStorage.getItem("orders")||"[]");
+  orders.push({name, product, price, utr});
+  localStorage.setItem("orders", JSON.stringify(orders));
+
+  alert("✅ Order Submitted! Admin can verify payment.");
+  window.location.href="index.html";
+});
+</script>
+</body>
+</html>
