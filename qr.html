@@ -5,31 +5,10 @@
 <title>Scan & Pay | Aura X Cheats</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body{
-  background:#0b0b0f;
-  color:#fff;
-  font-family:Arial, sans-serif;
-  text-align:center;
-  padding:20px;
-}
-.box{
-  max-width:380px;
-  margin:60px auto;
-  padding:25px;
-  background:#141414;
-  border-radius:14px;
-  box-shadow:0 0 20px rgba(168,85,247,.4);
-}
-h2, h1, h3{margin:6px 0}
-button{
-  padding:14px 22px;
-  background:#a855f7;
-  border:none;
-  border-radius:10px;
-  font-weight:800;
-  cursor:pointer;
-  margin-top:15px;
-}
+body{background:#0b0b0f;color:#fff;font-family:Arial;text-align:center;padding:20px}
+.box{max-width:380px;margin:60px auto;padding:25px;background:#141414;border-radius:14px;box-shadow:0 0 20px rgba(168,85,247,.4)}
+h2,h1,h3{margin:6px 0}
+button{padding:14px 22px;background:#a855f7;border:none;border-radius:10px;font-weight:800;cursor:pointer;margin-top:15px}
 button:hover{opacity:.9}
 a{color:#a855f7;text-decoration:none}
 img{border-radius:12px;margin-top:15px}
@@ -55,29 +34,24 @@ const params = new URLSearchParams(window.location.search);
 const product = params.get("product");
 const price = params.get("price");
 
-// GET LOGGED IN USER
-const user = JSON.parse(localStorage.getItem("loggedUser"));
-
 // CHECK LOGIN
+const user = JSON.parse(localStorage.getItem("loggedUser"));
 if(!user){
   alert("❌ You must login first!");
   window.location.href = "login.html";
-}
-
-// SHOW USER NAME
-if(user){
+}else{
   document.getElementById("username").innerText = "Hello, " + user.username;
 }
 
 // CHECK PRODUCT ACCESS
 if(!product || !price){
   document.body.innerHTML = "<h2>Invalid Access</h2><a href='index.html'>Go Home</a>";
-} else {
+}else{
   document.getElementById("pname").innerText = decodeURIComponent(product);
   document.getElementById("price").innerText = "₹" + price;
 }
 
-// REDIRECT TO PAY PAGE AFTER PAYMENT
+// REDIRECT TO PAY
 function goPay(){
   window.location.href = "./pay.html?product="+encodeURIComponent(product)+"&price="+price;
 }
