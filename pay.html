@@ -2,72 +2,118 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Pay Now</title>
+<title>Payment Details – Aura X Cheats Store</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body{background:#0b0b0b;color:#fff;font-family:Arial;padding:20px;}
-h2{text-align:center;color:#a855f7;margin-bottom:10px;}
-input,select,button{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:none;}
-button{background:#a855f7;color:#000;font-weight:bold;cursor:pointer;}
-label{display:block;margin-top:12px;margin-bottom:4px;}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:radial-gradient(circle at top,#1c1030,#0b0b0f 65%);
+  color:#fff;margin:0;padding:0;text-align:center;
+}
+.container{
+  max-width:420px;margin:40px auto;background:#141414;border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px;padding:25px;box-shadow:0 0 20px rgba(168,85,247,.3);
+}
+h1{color:#a855f7;margin-bottom:12px;}
+input,select{
+  width:100%;padding:10px;margin:8px 0;border-radius:8px;border:none;outline:none;
+  background:#222;color:#fff;
+}
+button{
+  width:100%;background:#a855f7;color:#000;font-weight:bold;padding:14px;
+  border:none;border-radius:10px;cursor:pointer;
+}
+button:hover{background:#bf74ff;}
+small{color:#00ffcc;}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+(function(){ emailjs.init("lDpUNN_uwsW-vT8_2"); })();
+
+function sendEmail(e){
+  e.preventDefault();
+  const data={
+    product:document.getElementById("product").value,
+    price:document.getElementById("price").value,
+    utr:document.getElementById("utr").value,
+    uid:document.getElementById("uid").value,
+    region:document.getElementById("region").value,
+    telegram:document.getElementById("telegram").value,
+    whatsapp:document.getElementById("whatsapp").value,
+    email:document.getElementById("email").value
+  };
+
+  // 1️⃣ Send to Admin
+  emailjs.send("service_sd0ge44","template_eclz1lh",data)
+  .then(()=>{
+    // 2️⃣ Send Auto-Reply to Customer
+    return emailjs.send("service_sd0ge44","customer_reply",data);
+  })
+  .then(()=>{
+    document.querySelector(".container").innerHTML=`
+      <h1>✅ ORDER RECEIVED!</h1>
+      <p>We have received your payment details and Guild UID successfully.</p>
+      <p>Please wait <b>10–30 minutes</b>. Admin will verify your payment and add the bot.</p>
+      <p>For updates & support, stay connected on Telegram.</p>
+      <p>Redirecting to Telegram in <span id="timer">5</span> seconds…</p>
+      <a href="https://t.me/aura_x_cheats" style="color:#a855f7;">[BACK TO HOME]</a>`;
+    let sec=5;
+    const interval=setInterval(()=>{
+      sec--;document.getElementById("timer").innerText=sec;
+      if(sec<=0){clearInterval(interval);window.location.href="https://t.me/aura_x_cheats";}
+    },1000);
+  })
+  .catch(err=>{console.error(err);alert("❌ Email send error – check console.");});
+}
+</script>
 </head>
 <body>
 
-<h2 id="prodName">Order</h2>
-<p style="text-align:center">Amount: ₹<span id="prodPrice"></span></p>
-<img src="upi-qr.png" style="width:100%;max-width:300px;display:block;margin:10px auto">
-<p style="text-align:center"><b>UPI ID:</b> kumaripalak0@fam</p>
+<div class="container">
+  <h1>Aura X Cheats Store</h1>
+  <p>✔ Payment already completed via QR. Please submit details below.</p>
 
-<form id="orderForm">
-  <label>Payment UTR / Transaction ID (Required)</label>
-  <input type="text" name="utr" placeholder="Enter UTR number" required>
+  <form onsubmit="sendEmail(event)">
+    <label>Product Name</label>
+    <input type="text" id="product" readonly>
 
-  <label>Guild UID (Required)</label>
-  <input type="text" name="guild" placeholder="Example: 100200300" required>
+    <label>Amount (₹)</label>
+    <input type="text" id="price" readonly>
 
-  <label>Region</label>
-  <select name="region" required>
-    <option value="">Select Region</option>
-    <option value="India">🇮🇳 India</option>
-    <option value="Other">Other</option>
-  </select>
+    <label>Payment UTR / Transaction ID (Required)</label>
+    <input type="text" id="utr" placeholder="Enter UTR number" required>
 
-  <label>Telegram Username</label>
-  <input type="text" name="telegram" placeholder="@username" required>
+    <label>Guild UID (Required)</label>
+    <input type="text" id="uid" placeholder="Example: 100200300" required>
 
-  <label>WhatsApp Number</label>
-  <input type="text" name="whatsapp" placeholder="+91XXXXXXXXXX" required>
+    <label>Region</label>
+    <select id="region">
+      <option>🇮🇳 India</option>
+      <option>🌎 Other</option>
+    </select>
 
-  <button type="submit">Submit Order</button>
-</form>
+    <label>Telegram Username</label>
+    <input type="text" id="telegram" placeholder="@username">
+
+    <label>WhatsApp Number</label>
+    <input type="text" id="whatsapp" placeholder="+91XXXXXXXXXX">
+
+    <label>Email (for confirmation)</label>
+    <input type="email" id="email" placeholder="example@gmail.com" required>
+
+    <button type="submit">Submit Details</button>
+  </form>
+</div>
 
 <script>
-const params = new URLSearchParams(window.location.search);
-document.getElementById("prodName").innerText = params.get("name");
-document.getElementById("prodPrice").innerText = params.get("price");
-
-document.getElementById("orderForm").addEventListener("submit", function(e){
-  e.preventDefault();
-
-  const orderData = {
-    product: params.get("name"),
-    price: params.get("price"),
-    utr: this.utr.value,
-    guild: this.guild.value,
-    region: this.region.value,
-    telegram: this.telegram.value,
-    whatsapp: this.whatsapp.value
-  };
-
-  // Save to localStorage
-  let orders = JSON.parse(localStorage.getItem("orders")||"[]");
-  orders.push(orderData);
-  localStorage.setItem("orders", JSON.stringify(orders));
-
-  alert("✅ Order Submitted! Admin can verify payment.");
+// Fill product & price from URL
+const url=new URLSearchParams(window.location.search);
+document.getElementById("product").value=url.get("name")||"Unknown Plan";
+document.getElementById("price").value=url.get("price")||"0";
+if(!url.get("price")){
+  alert("Please complete payment first.");
   window.location.href="index.html";
-});
+}
 </script>
 </body>
 </html>
