@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Admin Panel | Aura X Cheats</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
 body{
   margin:0;
@@ -14,7 +13,7 @@ body{
   padding:20px;
 }
 .container{
-  max-width:1000px;
+  max-width:1200px;
   margin:auto;
   background:#141414;
   padding:20px;
@@ -34,13 +33,14 @@ th,td{
 }
 th{background:#1f1f1f}
 button{
-  padding:8px 12px;
+  padding:6px 10px;
   border:none;
-  border-radius:8px;
+  border-radius:6px;
   font-weight:700;
   cursor:pointer;
 }
 .deleteBtn{background:#ff4d4d;color:#000}
+.editBtn{background:#facc15;color:#000}
 .exportBtn{
   background:#a855f7;
   color:#000;
@@ -52,31 +52,34 @@ button{
   align-items:center;
   margin-bottom:15px;
 }
-a{color:#a855f7;text-decoration:none;font-weight:700}
+a{color:#a855f7;text-decoration:none;font-weight:700;margin-left:10px}
 </style>
 </head>
-
 <body>
 
 <div class="container">
-
   <div class="topbar">
-    <h2>🛡 Admin Orders Panel</h2>
-    <a href="index.html">⬅ Home</a>
+    <h2>🛡 Admin Dashboard</h2>
+    <div>
+      <a href="index.html">⬅ Home</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </div>
   </div>
 
+  <h3>📦 Orders</h3>
   <table id="ordersTable"></table>
+  <button class="exportBtn" id="exportOrdersBtn">⬇ Export Orders CSV</button>
 
-  <button class="exportBtn" id="exportBtn">⬇ Export CSV</button>
-
+  <h3 style="margin-top:30px">👥 Registered Users</h3>
+  <table id="usersTable"></table>
+  <button class="exportBtn" id="exportUsersBtn">⬇ Export Users CSV</button>
 </div>
 
 <script>
 /* =============================
-   🔐 ADMIN PASSWORD SECTION
+   🔐 ADMIN PASSWORD
 ============================= */
-const ADMIN_PASSWORD = "aura_x_cheats"; // 👈 CHANGE PASSWORD HERE
-
+const ADMIN_PASSWORD = "aura_x_cheats"; // change admin password
 let isAdmin = sessionStorage.getItem("isAdmin");
 if(!isAdmin){
   const pass = prompt("🔐 Enter Admin Password:");
@@ -88,14 +91,19 @@ if(!isAdmin){
   }
 }
 
+function logout(){
+  sessionStorage.removeItem("isAdmin");
+  window.location.href = "index.html";
+}
+
 /* =============================
    📦 LOAD ORDERS
 ============================= */
 let orders = JSON.parse(localStorage.getItem("orders") || "[]");
-const table = document.getElementById("ordersTable");
+const ordersTable = document.getElementById("ordersTable");
 
-function render(){
-  table.innerHTML = `
+function renderOrders(){
+  ordersTable.innerHTML = `
     <tr>
       <th>#</th>
       <th>Username</th>
@@ -112,7 +120,7 @@ function render(){
   `;
 
   if(orders.length === 0){
-    const row = table.insertRow();
+    const row = ordersTable.insertRow();
     const cell = row.insertCell();
     cell.colSpan = 11;
     cell.innerText = "No orders found.";
@@ -121,7 +129,7 @@ function render(){
   }
 
   orders.forEach((o,i)=>{
-    const row = table.insertRow();
+    const row = ordersTable.insertRow();
     row.insertCell().innerText = i+1;
     row.insertCell().innerText = o.username || "N/A";
     row.insertCell().innerText = o.email || "N/A";
@@ -133,33 +141,97 @@ function render(){
     row.insertCell().innerText = o.telegram;
     row.insertCell().innerText = o.whatsapp;
 
-    const btn = document.createElement("button");
-    btn.innerText = "Delete";
-    btn.className = "deleteBtn";
-    btn.onclick = ()=>{
+    const cell = row.insertCell();
+    const delBtn = document.createElement("button");
+    delBtn.innerText="Delete";
+    delBtn.className="deleteBtn";
+    delBtn.onclick=()=>{
       if(confirm("Delete this order?")){
         orders.splice(i,1);
-        saveRender();
+        saveOrders();
       }
     };
-    row.insertCell().appendChild(btn);
+    cell.appendChild(delBtn);
   });
 }
 
-function saveRender(){
+function saveOrders(){
   localStorage.setItem("orders", JSON.stringify(orders));
-  render();
+  renderOrders();
+}
+
+/* =============================
+   👥 LOAD USERS
+============================= */
+let users = JSON.parse(localStorage.getItem("users")||"[]");
+const usersTable = document.getElementById("usersTable");
+
+function renderUsers(){
+  usersTable.innerHTML = `
+    <tr>
+      <th>#</th>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Password</th>
+      <th>Action</th>
+    </tr>
+  `;
+
+  if(users.length===0){
+    const row = usersTable.insertRow();
+    const cell = row.insertCell();
+    cell.colSpan = 5;
+    cell.innerText = "No users registered.";
+    cell.style.opacity=".6";
+    return;
+  }
+
+  users.forEach((u,i)=>{
+    const row = usersTable.insertRow();
+    row.insertCell().innerText=i+1;
+    row.insertCell().innerText=u.username;
+    row.insertCell().innerText=u.email;
+    row.insertCell().innerText=u.password;
+
+    const cell = row.insertCell();
+    const editBtn = document.createElement("button");
+    editBtn.innerText="Edit";
+    editBtn.className="editBtn";
+    editBtn.onclick=()=>{
+      const newPass = prompt("Enter new password for "+u.username,u.password);
+      if(newPass){
+        users[i].password = newPass;
+        saveUsers();
+      }
+    };
+    const delBtn = document.createElement("button");
+    delBtn.innerText="Delete";
+    delBtn.className="deleteBtn";
+    delBtn.style.marginLeft="5px";
+    delBtn.onclick=()=>{
+      if(confirm("Delete this user?")){
+        users.splice(i,1);
+        saveUsers();
+      }
+    };
+    cell.appendChild(editBtn);
+    cell.appendChild(delBtn);
+  });
+}
+
+function saveUsers(){
+  localStorage.setItem("users", JSON.stringify(users));
+  renderUsers();
 }
 
 /* =============================
    📤 EXPORT CSV
 ============================= */
-document.getElementById("exportBtn").addEventListener("click",()=>{
+document.getElementById("exportOrdersBtn").addEventListener("click",()=>{
   let csv = "Username,Email,Product,Price,UTR,Guild UID,Region,Telegram,WhatsApp\n";
   orders.forEach(o=>{
-    csv += `${o.username},${o.email},${o.product},${o.price},${o.utr},${o.uid},${o.region},${o.telegram},${o.whatsapp}\n`;
+    csv+=`${o.username},${o.email},${o.product},${o.price},${o.utr},${o.uid},${o.region},${o.telegram},${o.whatsapp}\n`;
   });
-
   const blob = new Blob([csv], {type:"text/csv"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
@@ -167,8 +239,20 @@ document.getElementById("exportBtn").addEventListener("click",()=>{
   a.click();
 });
 
-render();
-</script>
+document.getElementById("exportUsersBtn").addEventListener("click",()=>{
+  let csv = "Username,Email,Password\n";
+  users.forEach(u=>{
+    csv+=`${u.username},${u.email},${u.password}\n`;
+  });
+  const blob = new Blob([csv], {type:"text/csv"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "users.csv";
+  a.click();
+});
 
+renderOrders();
+renderUsers();
+</script>
 </body>
 </html>
